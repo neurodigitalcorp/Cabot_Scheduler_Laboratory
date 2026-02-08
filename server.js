@@ -54,8 +54,7 @@ app.post("/send-email", async (req, res) => {
 });
 // ------------------- FIN RUTAS API ------------------- //
 
-// ----------- NUEVO: SERVIR FRONTEND COMPILADO ----------- //
-// Esto permite que el mismo servicio de Render sirva la SPA de Vite (carpeta dist)
+// ----------- SERVIR FRONTEND COMPILADO ----------- //
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const distPath = path.join(__dirname, "dist");
@@ -64,8 +63,8 @@ const distPath = path.join(__dirname, "dist");
 app.use(express.static(distPath));
 
 // Fallback para SPA (React Router, etc.)
-// IMPORTANTE: Este fallback debe ir DESPUÉS de tus rutas API
-app.get("*", (req, res) => {
+// Debe ir DESPUÉS de las rutas API
+app.get("/*", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 // --------- FIN: SERVIR FRONTEND COMPILADO --------- //
