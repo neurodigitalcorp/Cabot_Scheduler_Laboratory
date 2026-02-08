@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Resend } from "resend";
 
-// --- NUEVO: para resolver rutas absolutas en ES Modules ---
+// --- para resolver rutas absolutas en ES Modules ---
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -63,8 +63,8 @@ const distPath = path.join(__dirname, "dist");
 app.use(express.static(distPath));
 
 // Fallback para SPA (React Router, etc.)
-// Debe ir DESPUÉS de las rutas API
-app.get("/*", (req, res) => {
+// Debe ir DESPUÉS de las rutas API y del static
+app.get("/:path(*)", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 // --------- FIN: SERVIR FRONTEND COMPILADO --------- //
