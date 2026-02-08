@@ -62,9 +62,13 @@ const distPath = path.join(__dirname, "dist");
 // Archivos estáticos (JS/CSS/imagenes generados por Vite)
 app.use(express.static(distPath));
 
-// Fallback para SPA (React Router, etc.)
-// Debe ir DESPUÉS de las rutas API y del static
-app.get("/:path(*)", (req, res) => {
+/**
+ * Fallback para SPA (React Router, etc.).
+ * Usamos RegExp para evitar el parser de `path-to-regexp`.
+ * Colócalo DESPUÉS de las rutas API y del static.
+ * La regex excluye explícitamente /health y /send-email por si acaso.
+ */
+app.get(/^(?!\/(health|send-email)).*/, (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 // --------- FIN: SERVIR FRONTEND COMPILADO --------- //
