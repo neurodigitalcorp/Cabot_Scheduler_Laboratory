@@ -134,21 +134,23 @@ const ConfigModal: React.FC<ConfigModalProps> = ({
     `;
   };
 
-const callResendAPI = async (subject: string, html: string) => {
+// ✅ Usa mismo origen en producción (Render) y localhost en dev:
+const API_BASE = import.meta.env.PROD
+  ? "" // Render: misma URL del sitio (p. ej., https://cabot-scheduler-laboratory.onrender.com)
+  : (import.meta.env.VITE_API_BASE || "http://localhost:4000"); // Dev en tu PC
 
-  const response = await fetch("http://localhost:4000/send-email", {
+const callResendAPI = async (subject: string, html: string) => {
+  const response = await fetch(`${API_BASE}/send-email`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      subject,
-      html
-    })
+    headers: { "Content-Type": "application/json" },
+    // Tu backend solo requiere `html`. (Puedes enviar `subject` si luego lo usas.)
+    body: JSON.stringify({ html })
   });
 
   if (!response.ok) {
-    throw new Error("Error enviando correo desde backend");
+    // Intenta leer el mensaje de error del servidor si existe
+    const msg = await response.text().catch(() => "");
+    throw new Error(msg || "Error enviando correo desde backend");
   }
 
   return await response.json();
