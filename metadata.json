@@ -1,0 +1,5 @@
+{
+  "name": "Cabot Scheduler",
+  "description": "Un sistema avanzado de gestión de turnos con rotación automática, edición manual y configuración de notificaciones.",
+  "requestFramePermissions": []
+}
