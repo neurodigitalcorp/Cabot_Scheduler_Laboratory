@@ -29,8 +29,6 @@ import {
   UserIcon
 } from './components/Icons';
 
-const LOGO_STORAGE_KEY = 'cabot_custom_logos_v2';
-
 const App: React.FC = () => {
   const isInitialized = useRef(false);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -64,8 +62,7 @@ useEffect(() => {
       const month = currentDate.getMonth() + 1; // 1–12
       const year = currentDate.getFullYear();
 
-      const response = await fetch(
-        `http://localhost:4000/schedule/data?month=${month}&year=${year}`
+      const response = await fetch(`/schedule/data?month=${month}&year=${year}`
       );
 
       if (!response.ok) {
@@ -132,7 +129,7 @@ const saveToBackend = useCallback(async () => {
     });
 
     // ✅ 2. Enviar TODO al backend (incluyendo resolvedSchedule)
-    await fetch("http://localhost:4000/schedule/data/save", {
+    await fetch("/schedule/data/save", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
