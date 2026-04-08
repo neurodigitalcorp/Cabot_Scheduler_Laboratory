@@ -106,8 +106,15 @@ const saveToBackend = useCallback(async () => {
   setSaveStatus("saving");
 
   try {
-    // ✅ 1. Construir cronograma FINAL resuelto (día x persona)
-    const resolvedSchedule: Record<string, Record<string, ShiftType>> = {};
+    // Diagnóstico opcional
+    if (!resolvedSchedule || Object.keys(resolvedSchedule).length === 0) {
+      console.warn(
+        "⚠️ resolvedSchedule vacío al guardar — se completará solo una vez"
+      );
+    }
+
+    const resolvedScheduleToSave: Record<string, Record<string, ShiftType>> =
+      JSON.parse(JSON.stringify(resolvedSchedule || {}));
 
     const daysCount = getDaysInMonth(
       currentDate.getFullYear(),
@@ -115,7 +122,9 @@ const saveToBackend = useCallback(async () => {
     );
 
     staff.forEach(person => {
-      resolvedSchedule[person.id] = {};
+      if (!resolvedScheduleToSave[person.id]) {
+        resolvedScheduleToSave[person.id] = {};
+      }
 
       for (let d = 1; d <= daysCount; d++) {
         const dateKey = formatDateKey(
@@ -124,35 +133,35 @@ const saveToBackend = useCallback(async () => {
           d
         );
 
-        resolvedSchedule[person.id][dateKey] =
-          overrides[person.id]?.[dateKey] ??
-          getShiftForDate(
-            person.baseDate,
-            person.startIndex,
-            dateKey
-          );
+        if (resolvedScheduleToSave[person.id][dateKey] == null) {
+          resolvedScheduleToSave[person.id][dateKey] =
+            overrides[person.id]?.[dateKey] ??
+            getShiftForDate(
+              person.baseDate,
+              person.startIndex,
+              dateKey
+            );
+        }
       }
     });
 
-    // ✅ 2. Enviar TODO al backend (incluyendo resolvedSchedule)
     await fetch("/schedule/data/save", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         month: currentDate.getMonth() + 1,
         year: currentDate.getFullYear(),
         data: {
           staff,
           overrides,
-          resolvedSchedule,   // ✅ ESTA ES LA CLAVE
+          resolvedSchedule: resolvedScheduleToSave,
           emails,
           mailingConfig,
         },
       }),
     });
 
+    setResolvedSchedule(resolvedScheduleToSave);
     setSaveStatus("saved");
     setTimeout(() => setSaveStatus("idle"), 2500);
   } catch (error) {
@@ -160,7 +169,7 @@ const saveToBackend = useCallback(async () => {
     setSaveStatus("idle");
     alert("Error guardando cronograma");
   }
-}, [staff, overrides, emails, mailingConfig, currentDate]);
+}, [staff, overrides, emails, mailingConfig, currentDate, resolvedSchedule]);
 
   const triggerSave = () => {
     setIsPasswordModalOpen(true);
