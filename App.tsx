@@ -422,17 +422,25 @@ const saveToBackend = useCallback(async () => {
 
       <main className="flex-1 p-4 flex flex-col items-center overflow-hidden">
         <div className="w-full max-w-full bg-white rounded-xl shadow-xl border border-slate-800 overflow-hidden relative flex flex-col">
-          <ShiftTable 
-            staff={staff} 
-            overrides={overrides} 
-            year={currentDate.getFullYear()} 
-            month={currentDate.getMonth()}
-            isPlanningMode={isPlanningMode}
-            onShiftChange={handleManualShiftChange}
-            onDeleteStaff={handleDeleteStaff}
-            onEditStaff={(s) => { setSelectedStaffForEdit(s); setIsEditStaffOpen(true); }}
-            onRecalc={(s) => { setSelectedStaffForRecalc(s); setIsRecalcOpen(true); }}
-          />
+<ShiftTable
+  staff={staff}
+  overrides={overrides}
+  resolvedSchedule={resolvedSchedule}
+  year={currentDate.getFullYear()}
+  month={currentDate.getMonth()}
+  isPlanningMode={isPlanningMode}
+  onShiftChange={handleManualShiftChange}
+  onDeleteStaff={handleDeleteStaff}
+  onEditStaff={(s) => {
+    setSelectedStaffForEdit(s);
+    setIsEditStaffOpen(true);
+  }}
+  onRecalc={(s) => {
+    setSelectedStaffForRecalc(s);
+    setIsRecalcOpen(true);
+  }}
+/>
+
         </div>
 
         {/* ÁREA DE LEYENDAS Y CONSULTA */}
