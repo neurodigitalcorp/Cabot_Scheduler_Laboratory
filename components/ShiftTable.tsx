@@ -1,5 +1,3 @@
-
-
 import React, { useState, useRef } from 'react';
 import { StaffMember, Overrides, ShiftType } from '../types';
 import { getDaysInMonth, formatDateKey, getShiftForDate, isToday } from '../utils/dateUtils';
