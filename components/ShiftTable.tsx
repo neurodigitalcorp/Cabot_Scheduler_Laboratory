@@ -117,11 +117,14 @@ const ShiftTable: React.FC<ShiftTableProps> = ({
               {days.map(day => {
               const dateKey = formatDateKey(year, month, day);
 
-              const shift =
-              resolvedSchedule?.[person.id]?.[dateKey]
-              ?? overrides?.[person.id]?.[dateKey]
-              ?? getShiftForDate(person.baseDate, person.startIndex, dateKey);
-              
+             const shift =
+            overrides?.[person.id]?.[dateKey]
+            ?? resolvedSchedule?.[person.id]?.[dateKey]
+            ?? getShiftForDate(
+            person.baseDate,
+            person.startIndex,
+            dateKey
+            );  
               
               const isSelected =
               selectedCell?.staffId === person.id &&
