@@ -64,7 +64,8 @@ useEffect(() => {
       const month = currentDate.getMonth() + 1; // 1–12
       const year = currentDate.getFullYear();
 
-      const response = await fetch(`/schedule/data?month=${month}&year=${year}`
+      const response = await fetch(
+        `/schedule/data?month=${month}&year=${year}`
       );
 
       if (!response.ok) {
@@ -74,31 +75,32 @@ useEffect(() => {
       const result = await response.json();
 
       if (result && result.data) {
-        setStaff(result.data.staff || INITIAL_STAFF);
-        setOverrides(result.data.overrides || {});
+        // ✅ Caso normal: hay cronograma guardado
+        setStaff(result.data.staff ?? INITIAL_STAFF);
+        setOverrides(result.data.overrides ?? {});
         setResolvedSchedule(result.data.resolvedSchedule ?? {});
-        setEmails(result.data.emails || []);
+        setEmails(result.data.emails ?? []);
         setMailingConfig(
-          result.data.mailingConfig || DEFAULT_MAILING_CONFIG
+          result.data.mailingConfig ?? DEFAULT_MAILING_CONFIG
         );
       } else {
-        // No hay data para ese mes/año
+        // ✅ Mes sin data: usar base, PERO NO borrar resolvedSchedule
         setStaff(INITIAL_STAFF);
         setOverrides({});
-        setResolvedSchedule({});
+        // ❌ NO setResolvedSchedule aquí
       }
     } catch (error) {
       console.error('Error cargando desde backend:', error);
 
-      // Fallback seguro
+      // ✅ Fallback seguro
       setStaff(INITIAL_STAFF);
       setOverrides({});
+      // ❌ NO tocar resolvedSchedule aquí tampoco
     }
   };
 
   loadFromBackend();
-}, [currentDate]); // ✅ clave
-
+}, [currentDate]);
 
 const saveToBackend = useCallback(async () => {
   setSaveStatus("saving");
