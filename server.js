@@ -397,9 +397,7 @@ app.get("/schedule/data", async (req, res) => {
     const { month, year } = req.query;
 
     if (!month || !year) {
-      return res.status(400).json({
-        error: "month y year son requeridos",
-      });
+      return res.status(400).json({ error: "month y year son requeridos" });
     }
 
     const { data, error } = await supabase
@@ -416,9 +414,11 @@ app.get("/schedule/data", async (req, res) => {
       throw error;
     }
 
-    res.json({ data });
-  } catch (error) {
-    console.error("❌ Error leyendo cronograma:", error);
+    // ✅ DEVOLVER DATA COMPLETA
+    res.json({ data: data.data });
+
+  } catch (err) {
+    console.error("❌ Error leyendo cronograma:", err);
     res.status(500).json({ error: "Error leyendo cronograma" });
   }
 });

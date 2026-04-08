@@ -61,7 +61,7 @@ const App: React.FC = () => {
 useEffect(() => {
   const loadFromBackend = async () => {
     try {
-      const month = currentDate.getMonth() + 1; // 1–12
+      const month = currentDate.getMonth() + 1;
       const year = currentDate.getFullYear();
 
       const response = await fetch(
@@ -73,29 +73,30 @@ useEffect(() => {
       }
 
       const result = await response.json();
+      const apiData = result?.data;
 
-      if (result && result.data) {
-        // ✅ Caso normal: hay cronograma guardado
-        setStaff(result.data.staff ?? INITIAL_STAFF);
-        setOverrides(result.data.overrides ?? {});
-        setResolvedSchedule(result.data.resolvedSchedule ?? {});
-        setEmails(result.data.emails ?? []);
+      if (
+        apiData?.resolvedSchedule &&
+        Object.keys(apiData.resolvedSchedule).length > 0
+      ) {
+        setStaff(apiData.staff ?? INITIAL_STAFF);
+        setOverrides(apiData.overrides ?? {});
+        setResolvedSchedule(apiData.resolvedSchedule);
+        setEmails(apiData.emails ?? []);
         setMailingConfig(
-          result.data.mailingConfig ?? DEFAULT_MAILING_CONFIG
+          apiData.mailingConfig ?? DEFAULT_MAILING_CONFIG
         );
-      } else {
-        // ✅ Mes sin data: usar base, PERO NO borrar resolvedSchedule
-        setStaff(INITIAL_STAFF);
-        setOverrides({});
-        // ❌ NO setResolvedSchedule aquí
+        return;
       }
-    } catch (error) {
-      console.error('Error cargando desde backend:', error);
 
-      // ✅ Fallback seguro
       setStaff(INITIAL_STAFF);
       setOverrides({});
-      // ❌ NO tocar resolvedSchedule aquí tampoco
+      // ❌ NO setResolvedSchedule
+    } catch (error) {
+      console.error('Error cargando desde backend:', error);
+      setStaff(INITIAL_STAFF);
+      setOverrides({});
+      // ❌ NO tocar resolvedSchedule
     }
   };
 
