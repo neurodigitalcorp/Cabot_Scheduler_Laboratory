@@ -8,9 +8,10 @@ import { SearchIcon, CalendarIcon, UserIcon } from './Icons';
 interface ShiftLookupProps {
   staff: StaffMember[];
   overrides: Overrides;
+  resolvedSchedule: Record<string, Record<string, ShiftType>>;
 }
 
-const ShiftLookup: React.FC<ShiftLookupProps> = ({ staff, overrides }) => {
+const ShiftLookup: React.FC<ShiftLookupProps> = ({ staff, overrides, resolvedSchedule, }) => {
   const today = new Date();
   const [selectedId, setSelectedId] = useState<string>(staff[0]?.id || '');
   const [day, setDay] = useState<number>(today.getDate());
@@ -23,7 +24,10 @@ const ShiftLookup: React.FC<ShiftLookupProps> = ({ staff, overrides }) => {
     if (!person) return;
 
     const dateKey = formatDateKey(year, month, day);
-    const shift = overrides[person.id]?.[dateKey] || getShiftForDate(person.baseDate, person.startIndex, dateKey);
+    const shift =
+  resolvedSchedule?.[person.id]?.[dateKey]
+  ?? overrides?.[person.id]?.[dateKey]
+  ?? getShiftForDate(person.baseDate, person.startIndex, dateKey);
     setQueryResult(shift);
   };
 

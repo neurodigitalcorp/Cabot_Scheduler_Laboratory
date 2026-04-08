@@ -34,6 +34,8 @@ const App: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [overrides, setOverrides] = useState<Overrides>({});
+  const [resolvedSchedule, setResolvedSchedule] =
+  useState<Record<string, Record<string, ShiftType>>>({});
   const [emails, setEmails] = useState<string[]>([]);
   const [mailingConfig, setMailingConfig] = useState<MailingConfig>(DEFAULT_MAILING_CONFIG);
   
@@ -74,6 +76,7 @@ useEffect(() => {
       if (result && result.data) {
         setStaff(result.data.staff || INITIAL_STAFF);
         setOverrides(result.data.overrides || {});
+        setResolvedSchedule(result.data.resolvedSchedule ?? {});
         setEmails(result.data.emails || []);
         setMailingConfig(
           result.data.mailingConfig || DEFAULT_MAILING_CONFIG
@@ -82,6 +85,7 @@ useEffect(() => {
         // No hay data para ese mes/año
         setStaff(INITIAL_STAFF);
         setOverrides({});
+        setResolvedSchedule({});
       }
     } catch (error) {
       console.error('Error cargando desde backend:', error);
@@ -268,9 +272,22 @@ const saveToBackend = useCallback(async () => {
     const body = staff.map(person => {
       const row = [person.name, person.role];
       for (let d = 1; d <= daysCount; d++) {
-        const dateKey = formatDateKey(currentDate.getFullYear(), currentDate.getMonth(), d);
-        row.push(overrides[person.id]?.[dateKey] || getShiftForDate(person.baseDate, person.startIndex, dateKey));
-      }
+  const dateKey = formatDateKey(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    d
+  );
+
+  row.push(
+    resolvedSchedule?.[person.id]?.[dateKey]
+    ?? overrides?.[person.id]?.[dateKey]
+    ?? getShiftForDate(
+         person.baseDate,
+         person.startIndex,
+         dateKey
+       )
+  );
+}
       return row;
     });
     (doc as any).autoTable({
@@ -287,9 +304,22 @@ const saveToBackend = useCallback(async () => {
     const data = staff.map(person => {
       const row = [person.name, person.role];
       for (let d = 1; d <= daysCount; d++) {
-        const dateKey = formatDateKey(currentDate.getFullYear(), currentDate.getMonth(), d);
-        row.push(overrides[person.id]?.[dateKey] || getShiftForDate(person.baseDate, person.startIndex, dateKey));
-      }
+  const dateKey = formatDateKey(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    d
+  );
+
+  row.push(
+    resolvedSchedule?.[person.id]?.[dateKey]
+    ?? overrides?.[person.id]?.[dateKey]
+    ?? getShiftForDate(
+         person.baseDate,
+         person.startIndex,
+         dateKey
+       )
+  );
+}
       return row;
     });
     const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
@@ -440,7 +470,7 @@ const saveToBackend = useCallback(async () => {
           </div>
 
           {/* COMPONENTE DE CONSULTA RÁPIDA */}
-          <ShiftLookup staff={staff} overrides={overrides} />
+          <ShiftLookup staff={staff} overrides={overrides} resolvedSchedule={resolvedSchedule}/>
         </div>
       </main>
 

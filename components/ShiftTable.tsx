@@ -9,6 +9,7 @@ import { TrashIcon, EditIcon, RefreshCwIcon, UserIcon } from './Icons';
 interface ShiftTableProps {
   staff: StaffMember[];
   overrides: Overrides;
+  resolvedSchedule: Record<string, Record<string, ShiftType>>;
   year: number;
   month: number;
   isPlanningMode: boolean;
@@ -19,7 +20,7 @@ interface ShiftTableProps {
 }
 
 const ShiftTable: React.FC<ShiftTableProps> = ({ 
-  staff, overrides, year, month, isPlanningMode, onShiftChange, onDeleteStaff, onEditStaff, onRecalc
+  staff, overrides, resolvedSchedule, year, month, isPlanningMode, onShiftChange, onDeleteStaff, onEditStaff, onRecalc
 }) => {
   const daysInMonth = getDaysInMonth(year, month);
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
@@ -116,9 +117,12 @@ const ShiftTable: React.FC<ShiftTableProps> = ({
                 </div>
               </td>
               {days.map(day => {
-                const dateKey = formatDateKey(year, month, day);
-                const shift = overrides[person.id]?.[dateKey] || getShiftForDate(person.baseDate, person.startIndex, dateKey);
-                const isSelected = selectedCell?.staffId === person.id && selectedCell?.dateKey === dateKey;
+              const dateKey = formatDateKey(year, month, day);
+
+              const shift =
+              resolvedSchedule?.[person.id]?.[dateKey]
+              ?? overrides?.[person.id]?.[dateKey]
+              ?? getShiftForDate(person.baseDate, person.startIndex, dateKey);
                 
                 return (
                   <td key={day} className="border-r border-slate-200 last:border-r-0 p-[1.5px] align-middle">
