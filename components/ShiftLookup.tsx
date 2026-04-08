@@ -10,6 +10,31 @@ interface ShiftLookupProps {
   resolvedSchedule: Record<string, Record<string, ShiftType>>;
 }
 
+const getShiftClass = (shift: string) => {
+  if (shift.startsWith("D")) {
+    return "bg-orange-50 text-orange-700 border border-orange-300";
+  }
+  if (shift.startsWith("N")) {
+    return "bg-purple-50 text-purple-700 border border-purple-300";
+  }
+  if (shift.startsWith("X")) {
+    return "bg-emerald-50 text-emerald-700 border border-emerald-300";
+  }
+
+  switch (shift) {
+    case "O":
+      return "bg-slate-50 text-slate-700 border border-slate-300";
+    case "C":
+    case "V":
+    case "CD":
+    case "P":
+    case "I":
+      return "bg-rose-50 text-rose-700 border border-rose-300";
+    default:
+      return "bg-white text-slate-600 border border-slate-300";
+  }
+};
+
 const ShiftLookup: React.FC<ShiftLookupProps> = ({
   staff,
   overrides,
@@ -53,7 +78,7 @@ const ShiftLookup: React.FC<ShiftLookupProps> = ({
         <select
           value={selectedId}
           onChange={(e) => setSelectedId(e.target.value)}
-          className="border border-slate-400 rounded px-2 py-1 text-xs"
+          className="border border-slate-400 rounded px-2 py-1 text-xs font-bold"
         >
           {staff.map((s) => (
             <option key={s.id} value={s.id}>
@@ -66,7 +91,7 @@ const ShiftLookup: React.FC<ShiftLookupProps> = ({
         <select
           value={day}
           onChange={(e) => setDay(parseInt(e.target.value))}
-          className="border border-slate-400 rounded px-2 py-1 text-xs"
+          className="border border-slate-400 rounded px-2 py-1 text-xs font-bold"
         >
           {days.map((d) => (
             <option key={d} value={d}>
@@ -79,7 +104,7 @@ const ShiftLookup: React.FC<ShiftLookupProps> = ({
         <select
           value={month}
           onChange={(e) => setMonth(parseInt(e.target.value))}
-          className="border border-slate-400 rounded px-2 py-1 text-xs"
+          className="border border-slate-400 rounded px-2 py-1 text-xs font-bold"
         >
           {MONTHS.map((m, i) => (
             <option key={i} value={i}>
@@ -92,7 +117,7 @@ const ShiftLookup: React.FC<ShiftLookupProps> = ({
         <select
           value={year}
           onChange={(e) => setYear(parseInt(e.target.value))}
-          className="border border-slate-400 rounded px-2 py-1 text-xs"
+          className="border border-slate-400 rounded px-2 py-1 text-xs font-bold"
         >
           {years.map((y) => (
             <option key={y} value={y}>
@@ -112,12 +137,25 @@ const ShiftLookup: React.FC<ShiftLookupProps> = ({
 
       <div className="mt-3 text-xs">
         {queryResult ? (
-          <strong>Turno asignado: {queryResult}</strong>
-        ) : (
-          <span className="text-slate-500">
-            Selecciona analista y fecha para consultar
-          </span>
-        )}
+  <div className="flex items-center gap-2 mt-2">
+    <span className="text-xs font-bold text-slate-700">
+      Turno asignado:
+    </span>
+
+    <span
+      className={`px-3 py-1 text-sm font-black rounded-md ${getShiftClass(
+        queryResult
+      )}`}
+    >
+      {queryResult}
+    </span>
+  </div>
+) : (
+  <span className="text-slate-500 text-xs">
+    Selecciona analista y fecha para consultar
+  </span>
+)}
+
       </div>
     </div>
   );
