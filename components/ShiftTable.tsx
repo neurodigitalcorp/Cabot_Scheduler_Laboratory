@@ -121,7 +121,12 @@ const ShiftTable: React.FC<ShiftTableProps> = ({
               resolvedSchedule?.[person.id]?.[dateKey]
               ?? overrides?.[person.id]?.[dateKey]
               ?? getShiftForDate(person.baseDate, person.startIndex, dateKey);
-                
+              
+              
+              const isSelected =
+              selectedCell?.staffId === person.id &&
+              selectedCell?.dateKey === dateKey;
+
                 return (
                   <td key={day} className="border-r border-slate-200 last:border-r-0 p-[1.5px] align-middle">
                     <button 
