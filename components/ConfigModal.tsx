@@ -123,9 +123,8 @@ const ConfigModal: React.FC<ConfigModalProps> = ({
         <tr><td style="border:1px solid #ddd; padding:6px;"><b>D1 / D2</b></td><td style="border:1px solid #ddd; padding:6px;">06:00 - 18:00 (Diurno)</td></tr>
         <tr><td style="border:1px solid #ddd; padding:6px;"><b>N1 / N2</b></td><td style="border:1px solid #ddd; padding:6px;">18:00 - 06:00 (Nocturno)</td></tr>
         <tr><td style="border:1px solid #ddd; padding:6px;"><b>M</b></td><td style="border:1px solid #ddd; padding:6px;">14:00 - 22:00 (Tarde)</td></tr>
-        <tr><td style="border:1px solid #ddd; padding:6px;"><b>L</b></td><td style="border:1px solid #ddd; padding:6px;">07:30 - 16:00 (Oficina)</td></tr>
-        <tr><td style="border:1px solid #ddd; padding:6px;"><b>X</b></td><td style="border:1px solid #ddd; padding:6px;">06:00 - 14:00 (Mañana)</td></tr>
-        <tr><td style="border:1px solid #ddd; padding:6px;"><b>O</b></td><td style="border:1px solid #ddd; padding:6px;">Descanso</td></tr>
+        <tr><td style="border:1px solid #ddd; padding:6px;"><b>O</b></td><td style="border:1px solid #ddd; padding:6px;">07:30 - 16:00 (Oficina)</td></tr>
+        <tr><td style="border:1px solid #ddd; padding:6px;"><b>L</b></td><td style="border:1px solid #ddd; padding:6px;">06:00 - 14:00 (Mañana)</td></tr>
       </table>
     </div>
 
@@ -142,7 +141,7 @@ const ConfigModal: React.FC<ConfigModalProps> = ({
         </tr>
         <tr>
           <td style="border:1px solid #ddd; padding:6px;"><b>I</b></td><td style="border:1px solid #ddd; padding:6px;">Incapacidad</td>
-          <td style="border:1px solid #ddd; padding:6px;"><b>X-1.5</b></td><td style="border:1px solid #ddd; padding:6px;">Descanso</td>
+          <td style="border:1px solid #ddd; padding:6px;"><b>X1-X5</b></td><td style="border:1px solid #ddd; padding:6px;">Descanso</td>
         </tr>
       </table>
     </div>
