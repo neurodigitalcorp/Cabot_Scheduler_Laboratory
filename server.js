@@ -256,9 +256,8 @@ function buildScheduleEmailHTML(scheduleData, month, year) {
       <tr><td>D1 / D2</td><td>06:00 - 18:00 (Diurno)</td></tr>
       <tr><td>N1 / N2</td><td>18:00 - 06:00 (Nocturno)</td></tr>
       <tr><td>M</td><td>14:00 - 22:00 (Tarde)</td></tr>
-      <tr><td>L</td><td>07:30 - 16:00 (Oficina)</td></tr>
-      <tr><td>X</td><td>08:00 - 14:00 (Mañana)</td></tr>
-      <tr><td>O</td><td>Descanso</td></tr>
+      <tr><td>O</td><td>07:30 - 16:00 (Oficina)</td></tr>
+      <tr><td>L</td><td>06:00 - 14:00 (Mañana)</td></tr>
       <tr><td>P</td><td>Permiso</td></tr>
       <tr><td>CD</td><td>Calamidad</td></tr>
       <tr><td>C</td><td>Compensado</td></tr>
